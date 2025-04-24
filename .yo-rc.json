@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "gateway",
+    "authenticationType": "jwt",
+    "baseName": "microProject",
+    "buildTool": "maven",
+    "cacheProvider": null,
+    "clientFramework": "no",
+    "clientTestFrameworks": null,
+    "clientTheme": null,
+    "creationTimestamp": 1745473485267,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": null,
+    "enableTranslation": false,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.10.0",
+    "jwtSecretKey": "MGMxZjU1Nzg4MzEyNzY4YWUyNzEwYTM1Njg4OTA2N2ZmYWFjZWExNDg5YjU5ZGJlNTM0NWM4MjRmMmVmY2QyNGRiN2RkOTEwNjBkMDk1MTYxNTVjNjE5ZGM5YjJkMGFlODMwMzAxMmYxNDI4ZGQ1ZjIyNTlhNmE0MTQ4YTA2YWE=",
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "en",
+    "packageName": "com.project.app",
+    "prodDatabaseType": "postgresql",
+    "reactive": true,
+    "serverPort": 8080,
+    "serviceDiscoveryType": "consul",
+    "skipClient": true,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": null
+  }
+}
