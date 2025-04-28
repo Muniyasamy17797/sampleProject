@@ -177,7 +177,8 @@ spring:
       console-available: true
 
 server:
-  servlet:
+port: 8080
+servlet:
     session:
       cookie:
         http-only: true

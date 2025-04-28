@@ -1,7 +1,5 @@
 package com.project.app;
 
-import com.project.app.config.ApplicationProperties;
-import com.project.app.config.CRLFLogConverter;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,11 +14,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
+
+import com.project.app.infrastructure.config.ApplicationProperties;
+import com.project.app.infrastructure.config.CRLFLogConverter;
+
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
+// @EnableJpaRepositories("com.project.app.infrastructure.adapters.persistence")
 public class MicroProjectApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroProjectApp.class);
