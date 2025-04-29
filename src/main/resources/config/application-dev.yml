@@ -36,9 +36,9 @@ spring:
   #   show-sql: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3307/microProject?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: microProject
-    password: microProject
+    url:  ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
     hikari:
       pool-name: Hikari
       auto-commit: false
@@ -52,6 +52,9 @@ spring:
     enabled: false   
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
+# custom:
+#   message: ${custom.message}
+
 management:
   endpoints:
     web:
@@ -62,7 +65,7 @@ logging:
   level:
     root: INFO
     com.sample: DEBUG
-    org.springframework.transaction.interceptor: TRACE
+    org.springframework.cloud.config.client: DEBUG
 
 server:
   port: 8080

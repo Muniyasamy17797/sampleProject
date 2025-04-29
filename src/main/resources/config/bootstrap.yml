@@ -12,6 +12,12 @@ spring:
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     active: '@spring.profiles.active@'
   cloud:
+    config:
+      uri: http://localhost:8888
+      label: beta
+      profile: dev
+      name: application
+      format: yaml
     consul:
       config:
         fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config

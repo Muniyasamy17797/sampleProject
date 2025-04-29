@@ -51,7 +51,7 @@ public class UserService implements UserUsecase  {
     public UserDTO create(UserDTO dto) {
 
         Users user = userMapper.toEntity(dto);
-       // user.setRole(getRoleOrThrow(dto.getRoleId()));
+        user.setRoles(resolveRoles(dto.getRoles()));
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 
@@ -59,6 +59,7 @@ public class UserService implements UserUsecase  {
      @Override
     public UserDTO update(UserDTO dto) {
         Users user = userRepositoryPort.findById(dto.getId()).orElseThrow();
+        System.out.println("user " + user);
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
@@ -66,7 +67,8 @@ public class UserService implements UserUsecase  {
         user.setMobile(dto.getMobile());
         user.setAddress(dto.getAddress());
         user.setPostalCode(dto.getPostalCode());
-        //user.setRoles(resolveRoles(dto.getRoles()));
+        user.setRoles(resolveRoles(dto.getRoles()));
+        System.out.println("updated user " + user);
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 
@@ -81,6 +83,7 @@ public class UserService implements UserUsecase  {
         if (dto.getPostalCode() != null) user.setPostalCode(dto.getPostalCode());
         if (dto.getPassword() != null) user.setPassword(PasswordUtil.hashPassword(dto.getPassword()));
         if (dto.getRoles() != null) user.setRoles(this.resolveRoles(dto.getRoles()));
+        
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 

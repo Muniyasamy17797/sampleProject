@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.annotation.Version;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,10 @@ public class Role extends AbstractAuditingEntity<Long> implements Serializable {
     @ManyToMany(mappedBy = "roles")
     @ToString.Exclude // Prevent circular reference
     private Set<Users> users = new HashSet<>();
+
+    @Version
+    private Long rowVersion;
+
 
     
     public Long getId() {

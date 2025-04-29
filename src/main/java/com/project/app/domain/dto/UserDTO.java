@@ -19,5 +19,7 @@ public class UserDTO {
     private final String address;
     private final String postalCode;
     private final Set<RoleType> roles;
+    private final Set<String> rolesNames;
+ 
       
 }

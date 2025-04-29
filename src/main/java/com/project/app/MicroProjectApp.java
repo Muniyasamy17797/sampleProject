@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
@@ -23,7 +24,6 @@ import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
-// @EnableJpaRepositories("com.project.app.infrastructure.adapters.persistence")
 public class MicroProjectApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroProjectApp.class);
@@ -33,6 +33,7 @@ public class MicroProjectApp {
     public MicroProjectApp(Environment env) {
         this.env = env;
     }
+
 
     /**
      * Initializes microProject.
