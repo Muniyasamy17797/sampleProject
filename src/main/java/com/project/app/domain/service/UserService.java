@@ -27,12 +27,14 @@ import com.project.app.infrastructure.utils.PasswordUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 
 
 
 @Service
 @Transactional
+@Slf4j
 public class UserService implements UserUsecase  {
     
 
@@ -50,7 +52,7 @@ public class UserService implements UserUsecase  {
     @Override
     public UserDTO create(UserDTO dto) {
 
-        Users user = userMapper.toEntity(dto);
+        var user = userMapper.toEntity(dto);
         user.setRoles(resolveRoles(dto.getRoles()));
         return userMapper.toDto(userRepositoryPort.save(user));
     }
@@ -58,7 +60,7 @@ public class UserService implements UserUsecase  {
 
      @Override
     public UserDTO update(UserDTO dto) {
-        Users user = userRepositoryPort.findById(dto.getId()).orElseThrow();
+        var user = userRepositoryPort.findById(dto.getId()).orElseThrow();
         System.out.println("user " + user);
         user.setUsername(dto.getUsername());
         user.setFirstName(dto.getFirstName());
@@ -68,28 +70,29 @@ public class UserService implements UserUsecase  {
         user.setAddress(dto.getAddress());
         user.setPostalCode(dto.getPostalCode());
         user.setRoles(resolveRoles(dto.getRoles()));
-        System.out.println("updated user " + user);
+        log.info("updated user " + user);
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 
     @Override
     public UserDTO patch(UserDTO dto) {
-        Users user = userRepositoryPort.findById(dto.getId()).orElseThrow();
-        if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
-        if (dto.getLastName() != null) user.setLastName(dto.getLastName());
-        if (dto.getEmail() != null) user.setEmail(dto.getEmail());
-        if (dto.getMobile() != null) user.setMobile(dto.getMobile());
-        if (dto.getAddress() != null) user.setAddress(dto.getAddress());
-        if (dto.getPostalCode() != null) user.setPostalCode(dto.getPostalCode());
-        if (dto.getPassword() != null) user.setPassword(PasswordUtil.hashPassword(dto.getPassword()));
-        if (dto.getRoles() != null) user.setRoles(this.resolveRoles(dto.getRoles()));
-        
+
+        var user = userRepositoryPort.findById(dto.getId()).orElseThrow();
+        Optional.ofNullable(dto.getFirstName()).ifPresent(user::setFirstName);
+        Optional.ofNullable(dto.getLastName()).ifPresent(user::setLastName);
+        Optional.ofNullable(dto.getEmail()).ifPresent(user::setEmail);
+        Optional.ofNullable(dto.getMobile()).ifPresent(user::setMobile);
+        Optional.ofNullable(dto.getAddress()).ifPresent(user::setAddress);
+        Optional.ofNullable(dto.getPostalCode()).ifPresent(user::setPostalCode);
+        Optional.ofNullable(dto.getPassword()).ifPresent(PasswordUtil::hashPassword);
+        Optional.ofNullable(dto.getRoles()).ifPresent(this::resolveRoles);
+
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 
     @Override
 public UserDTO getById(Long id) {
-    Users user = userRepositoryPort.findById(id)
+    var user = userRepositoryPort.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("User not found"));
     return userMapper.toDto(user);
 }
@@ -126,18 +129,18 @@ public UserDTO getById(Long id) {
     }
 
      private Set<Role> resolveRoles(Set<RoleType> roleNames) {
-        if (roleNames == null || roleNames.isEmpty()) return new HashSet<>();
+        if (roleNames == null || roleNames.isEmpty()) {
+            return new HashSet<>();
+        };
 
         // Convert role names to RoleType enum and fetch corresponding Role entities
         return roleNames.stream()
             .map(roleName -> {
-                RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase()); // Convert to enum
+                var roleType = RoleType.valueOf(roleName.name().toUpperCase()); // Convert to enum
                 return roleRepository.findByName(roleType.name()) // Fetch Role entity by name
                     .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleName));
             })
             .collect(Collectors.toSet());
     }
     
-    
- 
 }

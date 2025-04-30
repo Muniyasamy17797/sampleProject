@@ -36,20 +36,20 @@ public class RoleService implements RoleUsecase {
 
     @Override
     public RoleDTO create(@Valid RoleDTO dto) {
-        Role role = roleMapper.toEntity(dto);
+        var role = roleMapper.toEntity(dto);
         return roleMapper.toDto(roleRepositoryPort.save(role));
     }
 
     @Override
     public RoleDTO update(RoleDTO dto) {
-        Role role = roleRepositoryPort.findById(dto.getId()).orElseThrow();
+        var role = roleRepositoryPort.findById(dto.getId()).orElseThrow();
         role.setName(dto.getRoleType().name());
         return roleMapper.toDto(roleRepositoryPort.save(role));
     }
 
     @Override
     public RoleDTO patch(RoleDTO dto) {
-        Role role = roleRepositoryPort.findById(dto.getId()).orElseThrow();
+        var role = roleRepositoryPort.findById(dto.getId()).orElseThrow();
         if (dto.getName() != null) role.setName(dto.getRoleType().name());
         return roleMapper.toDto(roleRepositoryPort.save(role));
     }

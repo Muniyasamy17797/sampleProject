@@ -16,8 +16,14 @@ spring:
       uri: http://localhost:8888
       label: beta
       profile: dev
-      name: application
       format: yaml
+      fail-fast: true
+      retry:
+        enabled: true
+        max-attempts: 6
+        initial-interval: 1000
+        multiplier: 2
+        max-interval: 5000
     consul:
       config:
         fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config

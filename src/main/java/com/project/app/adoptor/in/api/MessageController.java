@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RefreshScope
 @RestController
 public class MessageController {
-    @Value("${custom.message}")
+    @Value("${spring.custom.message}")
     private String message;
 
     @GetMapping("/message")

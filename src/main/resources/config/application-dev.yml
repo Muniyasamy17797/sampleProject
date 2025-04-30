@@ -34,32 +34,31 @@ spring:
   #     dialect: org.hibernate.dialect.PostgreSQLDialect
   #     ddl-auto: update
   #   show-sql: true
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url:  ${spring.datasource.url}
-    username: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    hikari:
-      pool-name: Hikari
-      auto-commit: false
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+  # datasource:
+  #   type: com.zaxxer.hikari.HikariDataSource
+  #   url:  jdbc:mysql://localhost:3307/microProject?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+  #   username: microProject
+  #   password: microProject
+  #   hikari:
+  #     pool-name: Hikari
+  #     auto-commit: false
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+  #   properties:
+  #     hibernate:
+  #       dialect: org.hibernate.dialect.MySQL8Dialect
   liquibase:
     enabled: false   
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
-# custom:
-#   message: ${custom.message}
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  security:
+    enabled: false
 
 logging:
   level:

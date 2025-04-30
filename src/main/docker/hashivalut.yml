@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  vault:
+    image: hashicorp/vault:1.15.2  
+    container_name: vault
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=root
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8400
+    ports:
+      - "8400:8400"  # Expose Vault on port 8200
+    volumes:
+      - vault-data:/vault/data  # Persist data across restarts
+    cap_add:
+      - IPC_LOCK  # Allow Vault to lock memory (useful for performance)
+    restart: unless-stopped
+    command: "server -dev"
+    
+volumes:
+  vault-data:
+    driver: local
