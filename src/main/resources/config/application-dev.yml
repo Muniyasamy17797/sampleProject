@@ -19,6 +19,8 @@ spring:
           - git-branch=${git.branch:}
       host: localhost
       port: 8500
+    # datasoure:
+    #   password: ${spring.datasource.password}
 
   # datasource:
   #   type: com.zaxxer.hikari.HikariDataSource
@@ -65,6 +67,7 @@ logging:
     root: INFO
     com.sample: DEBUG
     org.springframework.cloud.config.client: DEBUG
+    org.springframework.cloud.vault: DEBUG
 
 server:
   port: 8080

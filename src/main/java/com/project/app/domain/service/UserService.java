@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.project.app.adoptor.out.UserRepository;
 import com.project.app.domain.dto.PagedResponse;
@@ -25,7 +27,9 @@ import com.project.app.adoptor.out.RoleRepository;
 import com.project.app.infrastructure.enums.RoleType;
 import com.project.app.infrastructure.utils.PasswordUtil;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,19 +46,29 @@ public class UserService implements UserUsecase  {
     private final UserRepositoryPort userRepositoryPort;
     private final RoleRepository roleRepository;
 
-    public UserService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, RoleRepository roleRepository) {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private final TransactionTemplate transactionTemplate;
+
+    public UserService(UserMapper userMapper, UserRepositoryPort userRepositoryPort, RoleRepository roleRepository, PlatformTransactionManager transactionManager) {
         this.userMapper = userMapper;
         this.userRepositoryPort = userRepositoryPort;
         this.roleRepository = roleRepository;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
+
     }
    
     
     @Override
     public UserDTO create(UserDTO dto) {
-
-        var user = userMapper.toEntity(dto);
-        user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toDto(userRepositoryPort.save(user));
+        // using manual transaction management to handle the transaction
+        // and rollback in case of exception
+        return transactionTemplate.execute(status -> {
+            var user = userMapper.toEntity(dto);
+            user.setRoles(resolveRoles(dto.getRoles()));
+            return userMapper.toDto(userRepositoryPort.save(user));
+        });
     }
 
 
@@ -142,5 +156,17 @@ public UserDTO getById(Long id) {
             })
             .collect(Collectors.toSet());
     }
+
+    public List<UserDTO> getUsersByFirstName(String firstName) {
+        log.info("EntityManager: " + entityManager);
+        var query = entityManager.createQuery(
+            "SELECT u FROM Users u WHERE u.firstName = :firstName", Users.class
+        );
+        query.setParameter("firstName", firstName);
+        List<Users> users = query.getResultList();
+        return users.stream().map(userMapper::toDto).toList();
+
+    }
+    
     
 }

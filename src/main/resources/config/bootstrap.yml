@@ -24,6 +24,14 @@ spring:
         initial-interval: 1000
         multiplier: 2
         max-interval: 5000
+    vault:
+      uri: http://localhost:8400
+      authentication: TOKEN
+      token: root
+      kv:
+        enabled: true
+        backend: secret
+        default-context: microProject
     consul:
       config:
         fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config

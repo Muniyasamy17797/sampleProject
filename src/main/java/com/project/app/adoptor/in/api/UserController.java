@@ -56,6 +56,11 @@ public class UserController {
         return ResponseEntity.ok(userUsecase.getAll());
     }
 
+    @GetMapping("/by-name")
+    public ResponseEntity<List<UserDTO>> getByFirstname(@RequestParam String firstname) {
+        return ResponseEntity.ok(userUsecase.getUsersByFirstName(firstname));
+    }
+
     @GetMapping("/paged")
     public ResponseEntity<PagedResponse<UserDTO>> getAllPaged(
         @RequestParam(defaultValue = "0") int offset,
