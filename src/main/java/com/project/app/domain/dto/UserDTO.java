@@ -4,22 +4,27 @@ import java.util.Set;
 
 import com.project.app.infrastructure.enums.RoleType;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     
-    private final Long id;
-    private final String username;
-    private final String password;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final String mobile;
-    private final String address;
-    private final String postalCode;
-    private final Set<RoleType> roles;
-    private final Set<String> rolesNames;
+    private  Long id;
+    private  String username;
+    private  String password;
+    private  String firstName;
+    private  String lastName;
+    private  String email;
+    private  String mobile;
+    private  String address;
+    private  String postalCode;
+    private  Set<RoleType> roles;
+    private  Set<String> rolesNames;
+    private  Long rowVersion;
  
       
 }

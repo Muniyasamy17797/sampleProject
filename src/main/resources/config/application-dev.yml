@@ -72,3 +72,6 @@ logging:
 server:
   port: 8080
 
+jwt:
+  secret: 4a7f1a9c4a3f4d7a8fbc7d6f25d9918b6d7cdd2ef9e3c3c512e1ef98d9ff2d60
+
