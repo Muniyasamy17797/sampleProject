@@ -36,7 +36,7 @@ public class JwtUtil {
                 .setSubject(username)                         // who this token belongs to
                 .setIssuedAt(new Date())                      // issue time
                 .setExpiration(new Date(System.currentTimeMillis() + 3600_000)) // 1 hour
-                .signWith(SignatureAlgorithm.HS256, secretKey)   // sign with secret
+                .signWith(SignatureAlgorithm.RS256, secretKey)   // sign with secret
                 .compact();
     }
 

@@ -1,5 +1,6 @@
 package com.project.app.domain.dto;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import com.project.app.infrastructure.enums.RoleType;
@@ -11,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO implements Serializable{
+
+    private static final long serialVersionUID = 1L;
     
     private  Long id;
     private  String username;

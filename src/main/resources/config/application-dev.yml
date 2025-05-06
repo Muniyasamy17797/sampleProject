@@ -2,6 +2,12 @@ spring:
   config:
     activate:
       on-profile: dev
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/myrealm
 
   cloud:
     consul:
@@ -19,6 +25,11 @@ spring:
           - git-branch=${git.branch:}
       host: localhost
       port: 8500
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
     # datasoure:
     #   password: ${spring.datasource.password}
 
@@ -70,8 +81,11 @@ logging:
     org.springframework.cloud.vault: DEBUG
 
 server:
-  port: 8080
+  port: 8090
 
 jwt:
   secret: 4a7f1a9c4a3f4d7a8fbc7d6f25d9918b6d7cdd2ef9e3c3c512e1ef98d9ff2d60
+
+
+
 

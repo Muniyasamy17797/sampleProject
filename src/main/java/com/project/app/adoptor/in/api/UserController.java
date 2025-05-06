@@ -7,6 +7,8 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.app.domain.dto.PagedResponse;
 import com.project.app.domain.dto.UserDTO;
 import com.project.app.domain.ports.UserUsecase;
+
 
 import jakarta.validation.Valid;
 
@@ -46,10 +49,11 @@ public class UserController {
         return ResponseEntity.ok(userUsecase.patch(dto));
     }
 
-     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getById(@PathVariable Long id) {
-        UserDTO dto = userUsecase.getById(id);
-        return ResponseEntity.ok(dto);    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getById(@PathVariable Long id,@AuthenticationPrincipal Jwt jwt) {
+        UserDTO dto = userUsecase.getById(id,jwt);
+        return ResponseEntity.ok(dto);   
+     }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAll() {

@@ -1,21 +1,26 @@
 package com.project.app.domain.service;
 
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.project.app.adoptor.out.UserRepository;
+
 import com.project.app.domain.dto.PagedResponse;
 import com.project.app.domain.dto.UserDTO;
 import com.project.app.domain.mapper.UserMapper;
@@ -26,6 +31,7 @@ import com.project.app.domain.ports.UserUsecase;
 import com.project.app.adoptor.out.RoleRepository;
 import com.project.app.infrastructure.enums.RoleType;
 import com.project.app.infrastructure.utils.PasswordUtil;
+
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -104,15 +110,33 @@ public class UserService implements UserUsecase  {
         return userMapper.toDto(userRepositoryPort.save(user));
     }
 
-    @Override
-public UserDTO getById(Long id) {
+
+@Override
+@Cacheable(value = "users", key = "#id")
+public UserDTO getById(Long id , Jwt jwt) {
     var user = userRepositoryPort.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("User not found"));
-    return userMapper.toDto(user);
+
+        List<String> roles = Optional.ofNullable(jwt.getClaim("realm_access"))
+        .map(realmAccess -> (Map<String, Object>) realmAccess)
+        .map(access -> (List<String>) access.get("roles"))
+        .orElse(Collections.emptyList());
+
+        if (roles.contains("admin")) {
+
+            return userMapper.toDto(user);
+           
+        } else if (!user.getUsername().equals(jwt.getSubject())) {
+            throw new AccessDeniedException("You are not allowed to access this user");
+        }
+
+   return new UserDTO();
 }
 
     @Override
+    @Cacheable(value = "allUsers")
     public List<UserDTO> getAll() {
+        log.info("Fetching all users from the database");
         List<Users> users = userRepositoryPort.findAll();
         return users.stream()
             .map(userMapper::toDto)
@@ -138,7 +162,9 @@ public UserDTO getById(Long id) {
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void delete(Long id) {
+        log.info("Deleting user with id: " + id);
         userRepositoryPort.deleteById(id);
     }
 
