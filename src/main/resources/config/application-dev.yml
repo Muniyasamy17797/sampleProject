@@ -7,8 +7,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/myrealm
-
+          issuer-uri: http://localhost:8081/realms/myrealm
+  
   cloud:
     consul:
       config:
@@ -30,37 +30,7 @@ spring:
   redis:
     host: localhost
     port: 6379
-    # datasoure:
-    #   password: ${spring.datasource.password}
 
-  # datasource:
-  #   type: com.zaxxer.hikari.HikariDataSource
-  #   url: jdbc:postgresql://localhost:5433/microProject?currentSchema=public
-  #   username: microProject
-  #   password: 
-  #   hikari:
-  #     poolName: Hikari
-  #     auto-commit: false
-
-  # jpa:
-  #   hibernate:
-  #     dialect: org.hibernate.dialect.PostgreSQLDialect
-  #     ddl-auto: update
-  #   show-sql: true
-  # datasource:
-  #   type: com.zaxxer.hikari.HikariDataSource
-  #   url:  jdbc:mysql://localhost:3307/microProject?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-  #   username: microProject
-  #   password: microProject
-  #   hikari:
-  #     pool-name: Hikari
-  #     auto-commit: false
-  # jpa:
-  #   hibernate:
-  #     ddl-auto: update
-  #   properties:
-  #     hibernate:
-  #       dialect: org.hibernate.dialect.MySQL8Dialect
   liquibase:
     enabled: false   
     change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -82,6 +52,21 @@ logging:
 
 server:
   port: 8090
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    # url: http://localhost:8090/v3/api-docs
+    path: /swagger-ui.html
+    oauth2-redirect-url: http://localhost:8090/swagger-ui/oauth2-redirect.html
+    oauth:
+      client-id: ${swagger-ui.oauth.client-id}
+      client-secret: ${swagger-ui.oauth.client-secret}
+      authorization-url: ${swagger-ui.oauth.authorization-url}
+      token-url: ${swagger-ui.oauth.token-url}
+      scope: ${swagger-ui.oauth.scope}
+
 
 jwt:
   secret: 4a7f1a9c4a3f4d7a8fbc7d6f25d9918b6d7cdd2ef9e3c3c512e1ef98d9ff2d60
