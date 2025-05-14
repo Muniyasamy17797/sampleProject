@@ -97,6 +97,12 @@
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
    </dependency>
 
+    <!-- Spring Cloud OpenFeign -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
 
     <!-- JPA + PostgreSQL -->
     <dependency>
