@@ -5,7 +5,7 @@
 
     <groupId>com.project.app</groupId>
     <artifactId>micro-project</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
     <name>Micro Project</name>
     <description>Description for Micro Project</description>
@@ -102,6 +102,13 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
 
 
     <!-- JPA + PostgreSQL -->
@@ -240,6 +247,7 @@
   </dependencies>
 
   <build>
+   <finalName>UserModule</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
