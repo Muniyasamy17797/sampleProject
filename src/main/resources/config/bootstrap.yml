@@ -6,6 +6,8 @@
 spring:
   application:
     name: microProject
+    config:
+      import: "optional:configserver:http://config-service:8888"
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -33,6 +35,7 @@ spring:
         backend: secret
         default-context: microProject
     consul:
+      host: consul
       config:
         fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
         format: yaml
@@ -45,8 +48,6 @@ spring:
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
           - context-path=${server.servlet.context-path:}
-
-      host: consul
       port: 8500
   docker:
     compose:

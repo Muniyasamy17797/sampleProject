@@ -7,7 +7,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/myrealm
+          issuer-uri: http://keycloak:8081/realms/myrealm
   
   cloud:
     consul:
@@ -23,12 +23,12 @@ spring:
           - git-version=${git.commit.id.describe:}
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
-      host: localhost
+      host: consul
       port: 8500
   cache:
     type: redis
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
   liquibase:

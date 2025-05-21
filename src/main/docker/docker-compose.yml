@@ -66,15 +66,15 @@
         - MYSQL_DATABASE=microProject
         - MYSQL_USER=microProject
         - MYSQL_PASSWORD=microProject
-      healthcheck:
-        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-        interval: 5s
-        timeout: 5s
-        retries: 10
       ports:
         - "3307:3306"       # Exposed on host's 3307 for local access, inside network it's 3306
       networks:
         - app-network
+      healthcheck:   
+        test: ["CMD", "mysqladmin", "ping", "-hmysql", "-umicroProject", "-pmicroProject"]
+        interval: 10s
+        timeout: 5s
+        retries: 10
     
 
     config-service:
@@ -89,6 +89,11 @@
         - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
         - SPRING_PROFILES_ACTIVE=dev
         - SERVER_ADDRESS=0.0.0.0
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
     user:
       build:
@@ -99,13 +104,70 @@
       networks:
         - app-network
       depends_on:
-        - consul
-        - vault
-        - config-service
-        - mysql
+       consul:
+         condition: service_started
+       vault:
+         condition: service_started
+       config-service:
+        condition: service_healthy
+       mysql:
+         condition: service_healthy
       environment:
         - SPRING_PROFILES_ACTIVE=dev
         - CONFIG_SERVER_URI=http://config-service:8888
+      entrypoint: [ "sh", "-c", "echo 'Waiting for MySQL...' && sleep 30 && java -Djava.net.preferIPv4Stack=true -jar /app/user/UserModule.jar" ]
+
+    
+    patient:
+      build:
+        context: C:/patient
+        dockerfile: patient.dockerfile
+      ports:
+        - "8101:8101"
+      networks:
+        - app-network
+      depends_on:
+       consul:
+         condition: service_started
+       vault:
+         condition: service_started
+       config-service:
+        condition: service_healthy
+       mysql:
+         condition: service_healthy
+      environment:
+        - SPRING_PROFILES_ACTIVE=dev
+        - CONFIG_SERVER_URI=http://config-service:8888
+        - SPRING_CLOUD_CONSUL_HOST=consul
+        - SPRING_CLOUD_CONSUL_PORT=8500
+        - SPRING_CLOUD_VAULT_URI=http://vault:8400
+      entrypoint: ["sh", "-c","echo 'Waiting for MySQL and Config Server...' && sleep 30 && java -Djava.net.preferIPv4Stack=true -Dspring.profiles.active=dev -Dspring.cloud.config.uri=http://config-service:8888 -jar /app/patient/patientmodule.jar"]
+    
+    vital:
+      build:
+        context: C:\vital\patient-vital
+        dockerfile: vital.dockerfile
+      ports:
+        - "8000:8000"
+      networks:
+        - app-network
+      depends_on:
+       consul:
+         condition: service_started
+       vault:
+         condition: service_started
+       config-service:
+        condition: service_healthy
+       mysql:
+         condition: service_healthy
+      environment:
+        - SPRING_PROFILES_ACTIVE=dev
+        - CONFIG_SERVER_URI=http://config-service:8888
+        - SPRING_CLOUD_CONSUL_HOST=consul
+        - SPRING_CLOUD_CONSUL_PORT=8500
+        - SPRING_CLOUD_VAULT_URI=http://vault:8400
+      entrypoint: ["sh", "-c","echo 'Waiting for MySQL and Config Server...' && sleep 30 && java -Djava.net.preferIPv4Stack=true -Dspring.profiles.active=dev -Dspring.cloud.config.uri=http://config-service:8888 -jar /app/vital/vital.jar"]
+
 
   networks:
     app-network:
@@ -115,3 +177,5 @@
   volumes:
     vault-data:
       driver: local
+
+  
